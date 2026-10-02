@@ -15,9 +15,9 @@ interface PersonalAvatarProps {
 
 const GREETING_MESSAGES = [
   "Hey! 👋",
-  "You found me!",
+  "You found me! ✨",
   "Namaste! 🙏",
-  "Glad you're here ✨",
+  "Glad you're here :)",
 ];
 
 export default function PersonalAvatar({
@@ -31,17 +31,15 @@ export default function PersonalAvatar({
   const bubbleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClick = () => {
-    // Cycle to next friendly message on each click
     setMessageIndex((prev) => (prev + 1) % GREETING_MESSAGES.length);
     setShowSpeechBubble(true);
 
     if (bubbleTimeoutRef.current) {
       clearTimeout(bubbleTimeoutRef.current);
     }
-    // Auto-dismiss after 2.8 seconds
     bubbleTimeoutRef.current = setTimeout(() => {
       setShowSpeechBubble(false);
-    }, 2800);
+    }, 2600);
   };
 
   useEffect(() => {
@@ -54,25 +52,22 @@ export default function PersonalAvatar({
     <div className={`relative inline-flex flex-col items-center select-none ${className}`}>
       {/* =========================================================================
        * Interactive Speech Bubble (Appears on Click)
-       * Friendly messages like "Hey! 👋" or "You found me!"
        * ========================================================================= */}
       {showSpeechBubble && (
         <div
           role="status"
           aria-live="polite"
-          className="absolute -top-12 left-1/2 -translate-x-1/2 z-30 animate-pop-in pointer-events-none"
+          className="absolute -top-10 left-1/2 -translate-x-1/2 z-30 animate-pop-in pointer-events-none"
         >
-          <div className="relative px-3.5 py-1.5 rounded-full bg-zinc-900/95 border border-white/20 text-zinc-100 text-xs font-medium tracking-wide shadow-xl backdrop-blur-md flex items-center gap-1.5 whitespace-nowrap">
+          <div className="relative px-3.5 py-1 rounded-full bg-[#18181c]/95 border border-white/20 text-zinc-100 text-xs font-medium tracking-wide shadow-xl backdrop-blur-md flex items-center gap-1.5 whitespace-nowrap">
             <span>{GREETING_MESSAGES[messageIndex]}</span>
-            {/* Triangle tail */}
-            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-zinc-900/95" />
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-[#18181c]/95" />
           </div>
         </div>
       )}
 
       {/* =========================================================================
-       * Avatar Container
-       * Clean circular portrait treatment with hover blush & glow
+       * Avatar Circle Frame
        * ========================================================================= */}
       <button
         type="button"
@@ -82,14 +77,14 @@ export default function PersonalAvatar({
         onTouchStart={() => setIsHovered(true)}
         onTouchEnd={() => setIsHovered(false)}
         aria-label="Interactive avatar of Kumar Ayushmaan. Click for a friendly greeting."
-        className="relative group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 rounded-full"
+        className="relative group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f16a4b] rounded-full"
       >
-        {/* Ambient glow behind avatar (blushes warm coral/rose on hover) */}
+        {/* Soft Ambient Glow (blushes warm coral/rose on hover) */}
         <div
-          className={`absolute -inset-3 rounded-full blur-xl transition-all duration-500 pointer-events-none ${
+          className={`absolute -inset-2.5 rounded-full blur-xl transition-all duration-500 pointer-events-none ${
             isHovered
-              ? "bg-gradient-to-r from-rose-500/25 via-pink-500/20 to-amber-500/20 opacity-100 scale-105"
-              : "bg-white/[0.04] opacity-40 scale-95"
+              ? "bg-[#f16a4b]/35 opacity-100 scale-105"
+              : "bg-white/[0.03] opacity-30 scale-95"
           }`}
         />
 
@@ -97,18 +92,13 @@ export default function PersonalAvatar({
         <div
           className={`relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[2px] transition-all duration-300 ease-out ${
             isHovered
-              ? "ring-2 ring-rose-400/50 shadow-[0_0_24px_rgba(251,113,133,0.3)] scale-[1.03]"
-              : "ring-1 ring-white/15 shadow-lg"
+              ? "ring-2 ring-[#f16a4b]/70 shadow-[0_0_26px_rgba(241,106,75,0.35)] scale-[1.03]"
+              : "ring-1 ring-white/15 shadow-md"
           }`}
         >
-          {/* Inner border sheen */}
-          <div className="relative w-full h-full rounded-full overflow-hidden bg-[#0d0e12] flex items-center justify-center border border-white/10">
+          <div className="relative w-full h-full rounded-full overflow-hidden bg-[#111114] flex items-center justify-center border border-white/10">
             {imageSrc ? (
-              /* =====================================================================
-               * Actual Profile Image Mode:
-               * When imageSrc is provided (e.g. imageSrc="/avatar.jpg"), your real
-               * photograph is cleanly framed here.
-               * ===================================================================== */
+              /* Profile Image Mode */
               <div className="relative w-full h-full">
                 <Image
                   src={imageSrc}
@@ -118,61 +108,56 @@ export default function PersonalAvatar({
                   className="object-cover rounded-full transition-transform duration-500 group-hover:scale-105"
                   priority
                 />
-                {/* Subtle warm blush sheen over the image on hover */}
+                {/* Subtle blush overlay on hover */}
                 <div
-                  className={`absolute inset-0 rounded-full bg-rose-500/10 pointer-events-none transition-opacity duration-300 ${
+                  className={`absolute inset-0 rounded-full bg-[#f16a4b]/15 pointer-events-none transition-opacity duration-300 ${
                     isHovered ? "opacity-100" : "opacity-0"
                   }`}
                 />
               </div>
             ) : (
-              /* =====================================================================
-               * Refined Personal Monogram / Portrait Placeholder:
-               * Clean, modern monogram typography with subtle geometric accents.
-               * (NOT a random cartoon character).
-               * ===================================================================== */
-              <div className="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-800 via-zinc-900 to-[#0c0d11]">
-                {/* Background decorative concentric lines */}
+              /* Minimalist Monogram Portrait Placeholder */
+              <div className="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#18181d] via-[#111115] to-[#0a0a0d]">
                 <div className="absolute inset-0 rounded-full border border-white/[0.04]" />
-                <div className="absolute inset-2 rounded-full border border-white/[0.03]" />
+                <div className="absolute inset-2 rounded-full border border-white/[0.02]" />
 
                 {/* Monogram Initials */}
                 <span
                   className={`font-mono text-2xl sm:text-3xl font-semibold tracking-wider transition-all duration-300 ${
                     isHovered
-                      ? "text-rose-200 drop-shadow-[0_0_12px_rgba(251,113,133,0.5)]"
+                      ? "text-[#f16a4b] drop-shadow-[0_0_12px_rgba(241,106,75,0.6)]"
                       : "text-zinc-200"
                   }`}
                 >
                   KA
                 </span>
 
-                {/* Subtle interactive blush cheek dots on hover */}
+                {/* Two subtle blush cheek dots */}
                 <div
-                  className={`flex items-center justify-between w-12 transition-all duration-300 ${
+                  className={`flex items-center justify-between w-12 mt-1 transition-all duration-300 ${
                     isHovered ? "opacity-90 scale-100" : "opacity-0 scale-75"
                   }`}
                 >
-                  <span className="w-2 h-1 rounded-full bg-rose-400/80 blur-[1px]" />
-                  <span className="w-2 h-1 rounded-full bg-rose-400/80 blur-[1px]" />
+                  <span className="w-2.5 h-1.5 rounded-full bg-[#f16a4b] blur-[1px]" />
+                  <span className="w-2.5 h-1.5 rounded-full bg-[#f16a4b] blur-[1px]" />
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Small live status indicator dot at bottom-right */}
+        {/* Small live status dot */}
         <span
-          className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-[#0a0a0c] p-[2px] flex items-center justify-center"
+          className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-[#0c0c0c] p-[2px] flex items-center justify-center"
           title="Active & building"
         >
           <span className="w-full h-full rounded-full bg-emerald-400" />
         </span>
       </button>
 
-      {/* Tasteful hover/click micro-label */}
-      <span className="mt-2.5 text-[11px] font-mono tracking-wider text-zinc-300 transition-colors duration-200 group-hover:text-zinc-200">
-        {isHovered ? "click me :)" : "ayushmaan"}
+      {/* Subtle micro label */}
+      <span className="mt-2 text-[11px] font-mono tracking-wider text-zinc-500 transition-colors duration-200 group-hover:text-zinc-300">
+        {isHovered ? ":3" : "ayushmaan"}
       </span>
     </div>
   );
